@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firewall & AI Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Firewall & AI Monitoring Dashboard</h1>
+    </header>
+    <section id="firewall">
+        <h2>Firewall Rules</h2>
+        <table id="firewallTable">
+            <!-- Firewall data will be inserted here -->
+        </table>
+    </section>
+    <section id="threats">
+        <h2>AI/ML Threat Detection</h2>
+        <div id="threatsData">
+            <!-- Anomaly detection results will be shown here -->
+        </div>
+    </section>
+    <script src="app.js"></script>
+</body>
+</html>
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1em;
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+h2 {
+    border-bottom: 2px solid #4CAF50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+// Fetch firewall rules and AI data from server
+async function fetchData() {
+    const response = await fetch('/api/data');
+    const data = await response.json();
+
+    const firewallTable = document.getElementById('firewallTable');
+    data.firewall_rules.forEach(rule => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${rule.ip}</td><td>${rule.status}</td>`;
+        firewallTable.appendChild(row);
+    });
+
+    const threatsDiv = document.getElementById('threatsData');
+    data.anomalies.forEach(anomaly => {
+        const p = document.createElement('p');
+        p.innerText = `Anomaly detected: ${anomaly.details}`;
+        threatsDiv.appendChild(p);
+    });
+}
+
+fetchData();
